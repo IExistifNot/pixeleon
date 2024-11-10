@@ -8,19 +8,16 @@ SCALE = 3 # Screen display will be scaled by this factor. Will not affect propor
 WIDTH = 180
 HEIGHT = 120
 BG_COLOR = "2" # can be any color in the colors dictionary aside from #
-initialized = False
+initialized = False # Track if initialization has occured
 RETRY_LIMIT = 10  # Max retries
 retry_count = 0
 redraw_retry_count = 0
 UP_INT = 30 # intervals for game updates in ms
-keys = set()
+keys = set() # Store pressed keys
 
 # Global variables
 screen = [[BG_COLOR for _ in range(WIDTH)] for _ in range(HEIGHT)]
 previous_screen = deep_copy_screen(screen)  # For detecting changed pixels
-sprites = {}  # Dictionary to store sprite data
-keys = set()  # Store pressed keys
-initialized = False  # Track if initialization has occurred
 plist = []  # List of sprite items to render in order
 
 pscreen = Image("https://codehs.com/uploads/9be41a87f652a94836a19635bdc5f733")
@@ -66,19 +63,26 @@ def populate_screen():
                     if 0 <= x < WIDTH and 0 <= y < HEIGHT:
                         screen[y][x] = color_code
 
+# redraw screen
 def redraw():
-    global pscreen
-    """
-    Redraw the screen by updating only the pixels that have changed.
-    """
-    global previous_screen
-    bg_color = get_color(BG_COLOR, colors)
-    for y in range(HEIGHT):
-        for x in range(WIDTH):
-            color_code = screen[y][x]
-            if previous_screen[y][x] != color_code:
-                pixel(pscreen, x, y, get_color(color_code, colors))
-    previous_screen = deep_copy_screen(screen)
+    global screen, screen2, redraw_retry_count
+    if redraw_retry_count >= RETRY_LIMIT:
+        print("Redraw failed after max retries.")
+        return
+    populate_screen()
+    bg_color = colors[BG_COLOR]  # Cache BG color
+    try:
+        for a in range(HEIGHT):
+            for b in range(WIDTH):
+                color_code = screen[a][b]
+                if screen2[a][b] != color_code:  # Only update changed pixels
+                    pixel(b, a, colors.get(color_code, bg_color))
+        previous_screen = deep_copy_screen(screen)
+        redraw_retry_count = 0  # Reset retry count on successful redraw
+    except Exception as e:
+        redraw_retry_count += 1
+        print(f"Error while redrawing screen: {e}. Reattempting in 10ms...")
+        timer.set_timeout(redraw, 10)
 
 # Input handlers
 def key_down(event):
@@ -109,7 +113,7 @@ def update_z(sprite, new_z_value):
     Update the z-value of a sprite and re-sort the rendering list.
     """
     sprite["z"] = new_z_value
-    sort_plist(plist)
+    sort_plist()
 
 # Main game loop
 def game_loop():
