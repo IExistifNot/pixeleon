@@ -28,4 +28,4 @@ __all__ = [
 # Set the package metadata
 __version__ = "1.0.0"
 __author__ = "Jack Tiedemann"
-__license__ = "MIT"  # Assuming you've chosen MIT license
+__license__ = "MIT"
