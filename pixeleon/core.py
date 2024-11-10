@@ -1,5 +1,6 @@
 from browser import timer
 from .utilities import insert_to_plist, sort_plist, scale_pixel, deep_copy_screen, get_color
+from .game_loop import game_loop
 
 # Configuration constants
 SCALE = 3
@@ -15,6 +16,11 @@ sprites = {}  # Dictionary to store sprite data
 keys = set()  # Store pressed keys
 initialized = False  # Track if initialization has occurred
 plist = []  # List of sprite items to render in order
+
+pscreen = Image("https://codehs.com/uploads/9be41a87f652a94836a19635bdc5f733")
+pscreen.set_size(WIDTH*SCALE,HEIGHT*SCALE)
+pscreen.set_position(0,0)
+add(pscreen)
 
 # Color definitions
 colors = {
@@ -115,7 +121,7 @@ def initialize(pscreen, initial_sprites):
     for sprite in plist:
         insert_to_plist(plist, sprite)
     initialized = True
-    timer.set_interval(lambda: game_loop(pscreen), UP_INT)
+    timer.set_interval(lambda: game_loop(), UP_INT)
 
 # Public interface
 def add_sprite(sprite_id, x=0, y=0, z=0, scale=1, frame_index=0):
