@@ -52,7 +52,7 @@ def deep_copy_screen(screen):
     return [row[:] for row in screen]
 
 
-def get_color(color_code, colors_dict):
+def get_color(color_code):
     """
     Get RGB values for a given color code.
 
