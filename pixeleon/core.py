@@ -121,7 +121,7 @@ def initialize(pscreen, initial_sprites):
     for sprite in plist:
         insert_to_plist(plist, sprite)
     initialized = True
-    timer.set_interval(lambda: game_loop(), UP_INT)
+    timer.set_interval(lambda: game_loop, UP_INT)
 
 # Public interface
 def add_sprite(sprite_id, x=0, y=0, z=0, scale=1, frame_index=0):
