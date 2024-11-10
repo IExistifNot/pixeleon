@@ -1,7 +1,5 @@
 from browser import timer
-from pixeleon.core import update_game, redraw
-
-UP_INT = 30  # Interval for game updates (milliseconds)
+from .core import update_game, redraw, initialized
 
 def game_loop():
     """
