@@ -25,9 +25,6 @@ __all__ = [
     "colors"
 ]
 
-rect = Rectangle(10,10)
-add(rect)
-
 # Set the package metadata
 __version__ = "1.0.0"
 __author__ = "Jack Tiedemann"
