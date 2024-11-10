@@ -1,7 +1,7 @@
 # __init__.py
 
 # Import core functionalities from different modules
-from .core import Screen, Sprite, COLORS, initialize_screen, redraw_screen
+from .core import Screen, Sprite, COLORS, initialize, redraw
 from .game_loop import GameLoop, handle_key_down, handle_key_up
 from .utilities import insert_to_plist, sort_plist
 
@@ -10,8 +10,8 @@ __all__ = [
     "Screen",
     "Sprite",
     "COLORS",
-    "initialize_screen",
-    "redraw_screen",
+    "initialize",
+    "redraw",
     "GameLoop",
     "handle_key_down",
     "handle_key_up",
