@@ -1,8 +1,9 @@
 # Import core functionalities from different modules
-from .core import Screen, Sprite, initialize, redraw
-from .game_loop import GameLoop, handle_key_down, handle_key_up
-from .utilities import insert_to_plist, sort_plist
-from .config import SCALE, WIDTH, HEIGHT, BG_COLOR, RETRY_LIMIT, UP_INT, colors
+from .core import *
+from .utilities import *
+from .game_loop import *
+from .config import *
+from .assets.sprites import *
 
 # Define __all__ to specify what is publicly accessible
 __all__ = [
