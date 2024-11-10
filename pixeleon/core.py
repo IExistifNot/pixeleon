@@ -123,17 +123,15 @@ def initialize(pscreen, initial_sprites):
     initialized = True
     timer.set_interval(lambda: game_loop, UP_INT)
 
-# Public interface
-def add_sprite(sprite_id, x=0, y=0, z=0, scale=1, frame_index=0):
+def add_sprite(sprite_id, frames):
     """
-    Add a sprite to the list with specified parameters.
+    Add a new sprite or modify an existing one with the given frames.
     """
-    new_sprite = {
-        "sprite_id": sprite_id,
-        "x": x,
-        "y": y,
-        "z": z,
-        "scale": scale,
-        "frame_index": frame_index
-    }
-    insert_to_plist(plist, new_sprite)
+    sprites[sprite_id] = frames
+
+def remove_sprite(sprite_id):
+    """
+    Remove a sprite by its sprite_id.
+    """
+    if sprite_id in sprites:
+        del sprites[sprite_id]
