@@ -16,7 +16,7 @@
 
 ## Requirements
 
-Pixeleon is designed specifically for CodeHS’s Brython environment. Make sure you have a CodeHS account to run and deploy your Pixeleon-based projects.
+Pixeleon is designed specifically for CodeHS’s Brython environment. Make sure you have a CodeHS account to run and deploy your Pixeleon-based projects, or have Brython set up in an HTML file. Tutorial here: [Brython Outside of CodeHS](https://codehs.com/tutorial/joianderson/how-to-use-python-graphics-on-your-website)
 
 ---
 
