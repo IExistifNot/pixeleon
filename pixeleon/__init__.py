@@ -1,9 +1,9 @@
 # Import core functionalities from different modules
 # from .core import *
-from .utilities import *
-from .game_loop import *
-from .config import *
-from .assets.sprites import *
+# from .utilities import *
+# from .game_loop import *
+# from .config import *
+# from .assets.sprites import *
 
 # Define __all__ to specify what is publicly accessible
 __all__ = [
