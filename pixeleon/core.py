@@ -2,17 +2,12 @@ from browser import timer
 from .utilities import insert_to_plist, sort_plist, scale_pixel, deep_copy_screen, get_color
 from .game_loop import game_loop
 from assets.sprites import sprites
+from .config import *
 
 # Configuration constants
-SCALE = 3 # Screen display will be scaled by this factor. Will not affect proportions.
-WIDTH = 180
-HEIGHT = 120
-BG_COLOR = "2" # can be any color in the colors dictionary aside from #
-initialized = False # Track if initialization has occured
-RETRY_LIMIT = 10  # Max retries
+initialized = False # Track if initialization has occurred
 retry_count = 0
 redraw_retry_count = 0
-UP_INT = 30 # intervals for game updates in ms
 keys = set() # Store pressed keys
 
 # Global variables
