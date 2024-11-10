@@ -1,4 +1,6 @@
 from bisect import bisect_left
+from .core import plist
+from .config import config
 
 def insert_to_plist(new):
     global plist
