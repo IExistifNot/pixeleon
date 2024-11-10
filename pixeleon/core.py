@@ -89,6 +89,9 @@ def key_up(event):
 def is_key_down(key):
     return key in keys
 
+add_key_down_handler(key_down)
+add_key_up_handler(key_up)
+
 # Game update functions
 def update_sprite_position(sprite, dx, dy):
     """
