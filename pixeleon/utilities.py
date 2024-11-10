@@ -1,6 +1,7 @@
 from bisect import bisect_left
 
-def insert_to_plist(plist, new):
+def insert_to_plist(new):
+    global plist
     """
     Insert a new dictionary into plist based on its "z" key value to maintain a sorted order.
 
@@ -12,7 +13,8 @@ def insert_to_plist(plist, new):
     plist.insert(index, new)
 
 
-def sort_plist(plist):
+def sort_plist():
+    global plist
     """
     Sort plist in place by the "z" key of each dictionary.
 
