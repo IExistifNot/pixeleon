@@ -119,7 +119,7 @@ def initialize(pscreen, initial_sprites):
     global initialized, plist
     plist.extend(initial_sprites)
     for sprite in plist:
-        insert_to_plist(plist, sprite)
+        insert_to_plist(sprite)
     initialized = True
     timer.set_interval(lambda: game_loop, UP_INT)
 
