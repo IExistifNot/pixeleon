@@ -123,17 +123,31 @@ def game_loop():
     redraw()
 
 # Initialization and setup
-def initialize(initial_sprites):
-    global pscreen
+def initialize():
     """
     Initialize the game screen, sprites, and start the main loop.
     """
-    global initialized, plist
-    plist.extend(initial_sprites)
-    for sprite in plist:
-        insert_to_plist(sprite)
-    initialized = True
-    timer.set_interval(lambda: game_loop, UP_INT)
+    global pscreen, initialized, plist, retry_count, input_active
+    if retry_count >= RETRY_LIMIT:
+        print("Initialization failed after max retries.")
+        return
+    elif retry_count == 0:
+        print("Beginning initialization. Please be patient, the console may log some errors but it will be okay.")
+    populate_screen()
+    try:
+        for a in range(HEIGHT):
+            for b in range(WIDTH):
+                pixel(b, a, colors[screen[a][b]])
+        screen2 = deep_copy_screen(screen)
+        print("Initialized!")
+        initialized = True
+        input_active = True  # Enable input once initialized
+        retry_count = 0
+        timer.set_interval(game_loop, UP_INT)  # Start the game loop, pausing for UP_INT ms (defaults to 30).
+    except Exception as e:
+        print(f"Something went wrong during initialization: {e}. Retrying in 100ms...")
+        retry_count += 1
+        timer.set_timeout(initialize, 100)
 
 def add_sprite(sprite_id, frames):
     """
