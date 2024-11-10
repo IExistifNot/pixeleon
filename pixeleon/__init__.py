@@ -1,5 +1,3 @@
-# __init__.py
-
 # Import core functionalities from different modules
 from .core import Screen, Sprite, COLORS, initialize, redraw
 from .game_loop import GameLoop, handle_key_down, handle_key_up
