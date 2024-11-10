@@ -4,11 +4,16 @@ from .game_loop import game_loop
 from assets.sprites import sprites
 
 # Configuration constants
-SCALE = 3
-WIDTH = 160
+SCALE = 3 # Screen display will be scaled by this factor. Will not affect proportions.
+WIDTH = 180
 HEIGHT = 120
-BG_COLOR = "2"  # Background color code
-UP_INT = 30  # Update interval in milliseconds
+BG_COLOR = "2" # can be any color in the colors dictionary aside from #
+initialized = False
+RETRY_LIMIT = 10  # Max retries
+retry_count = 0
+redraw_retry_count = 0
+UP_INT = 30 # intervals for game updates in ms
+keys = set()
 
 # Global variables
 screen = [[BG_COLOR for _ in range(WIDTH)] for _ in range(HEIGHT)]
@@ -61,7 +66,8 @@ def populate_screen():
                     if 0 <= x < WIDTH and 0 <= y < HEIGHT:
                         screen[y][x] = color_code
 
-def redraw(pscreen):
+def redraw():
+    global pscreen
     """
     Redraw the screen by updating only the pixels that have changed.
     """
@@ -106,14 +112,15 @@ def update_z(sprite, new_z_value):
     sort_plist(plist)
 
 # Main game loop
-def game_loop(pscreen):
+def game_loop():
     if not initialized:
         return
     populate_screen()
-    redraw(pscreen)
+    redraw()
 
 # Initialization and setup
-def initialize(pscreen, initial_sprites):
+def initialize(initial_sprites):
+    global pscreen
     """
     Initialize the game screen, sprites, and start the main loop.
     """
