@@ -1,5 +1,5 @@
 # Import core functionalities from different modules
-from .core import *
+# from .core import *
 from .utilities import *
 from .game_loop import *
 from .config import *
