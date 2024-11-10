@@ -1,6 +1,7 @@
 from browser import timer
 from .utilities import insert_to_plist, sort_plist, scale_pixel, deep_copy_screen, get_color
 from .game_loop import game_loop
+from assets.sprites import sprites
 
 # Configuration constants
 SCALE = 3
