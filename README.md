@@ -38,7 +38,7 @@ Pixeleon is designed specifically for CodeHS’s Brython environment. Make sure 
 Here’s a simple example to get started with Pixeleon.
 
 ```python
-from pixeleon.main import *  # Import the library (assuming Pixeleon code is in pixeleon.py)
+from pixeleon.main import *  # Import the library
 
 # Set the game window size and scaling
 WIDTH = 160
