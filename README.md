@@ -46,17 +46,41 @@ HEIGHT = 120
 SCALE = 3
 set_size(WIDTH * SCALE, HEIGHT * SCALE)
 
-# Create a sprite
-placeholder_sprite = {
-    "z": 0, "sprite_id": "placeholder", "x": 10, "y": 10, "scale": 1, "frame_index": 0
-}
+# Create some sprites
+billy = Sprite(0,0,0,"billy") # billy and smiley are included with the base code!
+smiley = Sprite(3,3,1,"smiley")
+# create a list of what needs to be written in order
+# UI class is x, y, z, is_text, sprite, color, frame_index, scale, animation_delay
+numbers = UI(0, 10, 0, True, "0123456789", "6")
+hello = UI(0,16,1,True,"hello, world! %", "6")
 
-# Add the sprite to the display list
-insert_to_list(placeholder_sprite, plist)
+# Add the sprites to the display list
+billy.insert_to_plist()
+smiley.insert_to_plist()
 
-# Game loop
+# Maybe change their z
+billy.update_z(3)
+
+# Maybe start an animation
+billy.start_animation(1000)
+
+# Define a game loop
 def update_game():
-    # Update game logic here, such as moving characters or changing sprite
+    # Update game logic here, such as moving characters or changing sprites
+    if input_active:
+        if is_key_down("a") or is_key_down("ArrowLeft"):
+            billy.x += -5
+        if is_key_down("d") or is_key_down("ArrowRight"):
+            billy.x += 5
+        if is_key_down("w") or is_key_down("ArrowUp"):
+            billy.y += -5
+        if is_key_down("s") or is_key_down("ArrowDown"):
+            billy.y += 5
+        if is_key_down(" "):
+            if billy.animation != None:
+                billy.stop_animation()
+            else:
+                billy.start_animation(1000)
 
 # Initialize and start the game
 init()
