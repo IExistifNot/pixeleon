@@ -47,16 +47,18 @@ SCALE = 3
 set_size(WIDTH * SCALE, HEIGHT * SCALE)
 
 # Create some sprites
+# Sprite class format is x, y, z, sprite, frame_index, scale, animation_delay
 billy = Sprite(0,0,0,"billy") # billy and smiley are included with the base code!
 smiley = Sprite(3,3,1,"smiley")
-# create a list of what needs to be written in order
 # UI class is x, y, z, is_text, sprite, color, frame_index, scale, animation_delay
 numbers = UI(0, 10, 0, True, "0123456789", "6")
 hello = UI(0,16,1,True,"hello, world! %", "6")
 
 # Add the sprites to the display list
-billy.insert_to_plist()
+billy.insert_to_plist() # Sprites go in plist
 smiley.insert_to_plist()
+numbers.insert_to_uilist() # UI goes in uilist (renders on top of plist)
+hello.insert_to_uilist()
 
 # Maybe change their z
 billy.update_z(3)
