@@ -9,7 +9,7 @@ INIT = False
 RETRY_LIMIT = 10  # Max retries
 retry_count = 0
 redraw_retry_count = 0
-UP_INT = 30 # intervals for game updates in ms
+UP_INT = 50 # intervals for game updates in ms
 keys = set()
 
 set_size(WIDTH * SCALE,HEIGHT * SCALE)
@@ -27,7 +27,7 @@ pscreen.set_position(0,0)
 add(pscreen)
 
 # Define animated sprites with each frame as a list of lists
-# a value for a spritelist can be quickly created at https://codehs.com/sandbox/id/img-to-tuple-Vkd5mm
+# a value for a spritelist can be quickly created at https://codehs.com/sandbox/blahajay/img-to-tuple
 sprites = {
     "billy": (
         (
@@ -105,11 +105,11 @@ letters = {
         (1,1,1,0)
     ),
     "e": (
-        (1,1,1,1),
-        (1,0,0,0),
-        (1,1,1,1),
-        (1,0,0,0),
-        (1,1,1,1)
+        (1,1,1),
+        (1,0,0),
+        (1,1,1),
+        (1,0,0),
+        (1,1,1)
     ),
     "f": (
         (1,1,1,1),
@@ -154,11 +154,11 @@ letters = {
         (1,0,0,1)
     ),
     "l": (
-        (1,0,0,0),
-        (1,0,0,0),
-        (1,0,0,0),
-        (1,0,0,0),
-        (1,1,1,1)
+        (1,0,0,),
+        (1,0,0,),
+        (1,0,0,),
+        (1,0,0,),
+        (1,1,1,)
     ),
     "m": (
         (0,1,0,1,0),
@@ -264,14 +264,163 @@ letters = {
         (0,),
         (0,),
         (0,),
+    ),
+    ".": (
+        (0,),
+        (0,),
+        (0,),
+        (0,),
+        (1,)
+    ),
+    ",": (
+        (0,),
+        (0,),
+        (0,),
+        (1,),
+        (1,)
+    ),
+    "!": (
+        (1,),
+        (1,),
+        (1,),
+        (0,),
+        (1,)
+    ),
+    "?": (
+        (1,1,0),
+        (0,0,1),
+        (0,1,0),
+        (0,0,0),
+        (0,1,0)
+    ),
+    "0": (
+        (0,1,1,0),
+        (1,0,0,1),
+        (1,1,1,1),
+        (1,0,0,1),
+        (0,1,1,0)
+    ),
+    "1": (
+        (0,1,0),
+        (1,1,0),
+        (0,1,0),
+        (0,1,0),
+        (1,1,1)
+    ),
+    "2": (
+        (0,1,1,0),
+        (1,0,0,1),
+        (0,0,1,0),
+        (0,1,0,0),
+        (1,1,1,1)
+    ),
+    "3": (
+        (1,1,0),
+        (0,0,1),
+        (1,1,0),
+        (0,0,1),
+        (1,1,0)
+    ),
+    "4": (
+        (1,0,1),
+        (1,0,1),
+        (1,1,1),
+        (0,0,1),
+        (0,0,1)
+    ),
+    "5": (
+        (1,1,1),
+        (1,0,0),
+        (1,1,1),
+        (0,0,1),
+        (1,1,0)
+    ),
+    "6": (
+        (0,1,1),
+        (1,0,0),
+        (1,1,1),
+        (1,0,1),
+        (1,1,1)
+    ),
+    "7": (
+        (1,1,1,1),
+        (0,0,0,1),
+        (0,0,1,0),
+        (0,1,0,0),
+        (1,0,0,0)
+    ),
+    "8": (
+        (0,1,1,0),
+        (1,0,0,1),
+        (0,1,1,0),
+        (1,0,0,1),
+        (0,1,1,0)
+    ),
+    "9": (
+        (0,1,1,0),
+        (1,0,0,1),
+        (0,1,1,1),
+        (0,0,1,0),
+        (0,1,0,0)
     )
 }
 
 # `plist` references sprite IDs and frame indexes
-# z, sprite_id, x, y, scale, and frame values
-# create a list of what needs to be written in order, including z, img, x, y, scale, and frame values (in that order)
+# z, sprite, x, y, scale, and frame values
+class BaseSprite:
+    def __init__(self, x=0, y=0, z=0, sprite="smiley", frame_index=0, scale=1, animation_delay=UP_INT):
+        self.x = x
+        self.y = y
+        self.z = z
+        self.sprite = sprite
+        self.frame_index = frame_index
+        self.scale = scale
+        self.animation_delay = animation_delay
+        self.cached_sprite = None
+        self.cached_id = None
+        self.animation = None
+       
+    def update_frame(self):
+        self.frame_index = (self.frame_index + 1) % len(sprites[self.sprite])
+
+    def update_z(self, new_z, lst):
+        self.z = new_z
+        sort_list(lst)  # Ensure `sort_list` is defined to sort by `z`
+
+    def start_animation(self, time=None):
+        if time is None:
+            time = self.animation_delay
+        self.animation = timer.set_interval(self.update_frame, time)
+    def stop_animation(self):
+        if self.animation:
+            timer.clear_interval(self.animation)
+            self.animation = None  # Reset animation state
+
+class Sprite(BaseSprite):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def update_z(self, new_z):
+        super().update_z(new_z, plist)
+
+    def insert_to_plist(self):
+        insert_to_list(self, plist)
+
+class UI(BaseSprite):
+    def __init__(self, x=0, y=0, z=0, is_text=False, sprite="smiley", color="7", frame_index=0, scale=1, animation_delay=UP_INT):
+        super().__init__(x, y, z, sprite, frame_index, scale, animation_delay)
+        self.is_text = is_text
+        self.color = color
+
+    def update_z(self, new_z):
+        super().update_z(new_z, uilist)
+
+    def insert_to_uilist(self):
+        insert_to_list(self, uilist)
+# Sprite class format is x, y, z, sprite, frame_index, scale, animation_delay
+# UI class is x, y, z, is_text, sprite, color, frame_index, scale, animation_delay
+# create lists of what needs to be written in order
 plist = []
-# z, isText, img, x, y, scale, frame values, color
 uilist = []
 
 def pixel(x,y,color):
@@ -282,81 +431,81 @@ def pixel(x,y,color):
             pscreen.set_blue(x*SCALE+a,y*SCALE+b,color[2])
 
 def text_to_sprite(text, color):
-    spr = [[],[],[],[],[]]
-    for char in list(text):
+    spr = [[] for _ in range(5)]  # Initialize with five rows
+    for char in text:
         if char in letters:
             for a in range(5):
                 for b in range(len(letters[char][0])):
-                    try:
-                        if letters[char][a][b] == 1:
-                            spr[a].append(color)
-                        else:
-                            spr[a].append("#")
-                    except IndexError:
-                        print(f"Index out of range for character {char} at position ({a}, {b})")
-                spr[a].extend(("#","#"))
+                    spr[a].append(color if letters[char][a][b] == 1 else "#")
+                spr[a].extend(("#", "#"))  # Space between characters
         else:
             print(f"Character {char} unable to be found.")
     return spr
 
 def insert_to_list(new, list):
     # Find the correct insertion index for the new dictionary based on the "z" key
-    index = bisect_left([pair["z"] for pair in list], new["z"])
+    index = bisect_left([pair.z for pair in list], new.z)
     # Insert the new dictionary at the identified index
     list.insert(index, new)
 
 def sort_list(list):
     # Sort plist by the "z" value of each dictionary
-    list.sort(key=lambda item: item["z"])
+    list.sort(key=lambda item: item.z)
 
 # Populate screen based on `plist` with scaling support and frame index for animation
 def populate_screen():
     global screen
-    screen = [[BG_COLOR] * WIDTH for _ in range(HEIGHT)]  # Fill the whole screen with BG_COLOR
+    screen = [[BG_COLOR] * WIDTH for _ in range(HEIGHT)]  # Reset screen
+
+    # Process `plist` items
     for item in plist:
-        sprite = sprites[item["sprite_id"]][item["frame_index"]]
-        effective_scale = item["scale"]
-        for a in range(len(sprite)):
-            for b in range(len(sprite[a])):
-                color_code = sprite[a][b]
+        sprite = sprites[item.sprite][item.frame_index] if item.cached_id != item.sprite + str(item.frame_index) else item.cached_sprite
+        if item.cached_id != item.sprite + str(item.frame_index):
+            item.cached_sprite = sprite
+            item.cached_id = item.sprite + str(item.frame_index)
+        
+        for a, row in enumerate(sprite):
+            for b, color_code in enumerate(row):
                 if color_code != "#":
-                    start_y, start_x = item["y"] + a * effective_scale, item["x"] + b * effective_scale
-                    for dy in range(effective_scale):
-                        for dx in range(effective_scale):
-                            y, x = start_y + dy, start_x + dx
-                            if 0 <= y < HEIGHT and 0 <= x < WIDTH:
-                                screen[y][x] = color_code
-    for item in uilist:
-        if item["isText"]:
-            sprite = text_to_sprite(item["img"],item["color"])
-        else:
-            sprite = sprites[item["img"]][item["frame_index"]]
-        effective_scale = item["scale"]
-        for a in range(len(sprite)):
-            for b in range(len(sprite[a])):
-                color_code = sprite[a][b]
-                if color_code != "#":
-                    start_y, start_x = item["y"] + a * effective_scale, item["x"] + b * effective_scale
-                    for dy in range(effective_scale):
-                        for dx in range(effective_scale):
+                    start_y, start_x = item.y + a * item.scale, item.x + b * item.scale
+                    for dy in range(item.scale):
+                        for dx in range(item.scale):
                             y, x = start_y + dy, start_x + dx
                             if 0 <= y < HEIGHT and 0 <= x < WIDTH:
                                 screen[y][x] = color_code
 
-# redraw screen
+    # Process `uilist` items
+    for item in uilist:
+        sprite = (text_to_sprite(item.sprite, item.color) if item.is_text else sprites[item.sprite][item.frame_index]) if item.cached_id != item.sprite + ("" if item.is_text else str(item.frame_index)) else item.cached_sprite
+        if item.cached_id != item.sprite + ("" if item.is_text else str(item.frame_index)):
+            item.cached_sprite = sprite
+            item.cached_id = item.sprite + ("" if item.is_text else str(item.frame_index))
+        
+        for a, row in enumerate(sprite):
+            for b, color_code in enumerate(row):
+                if color_code != "#":
+                    start_y, start_x = item.y + a * item.scale, item.x + b * item.scale
+                    for dy in range(item.scale):
+                        for dx in range(item.scale):
+                            y, x = start_y + dy, start_x + dx
+                            if 0 <= y < HEIGHT and 0 <= x < WIDTH:
+                                screen[y][x] = color_code
+
+# redraw the screen
 def redraw():
     global screen, screen2, redraw_retry_count
     if redraw_retry_count >= RETRY_LIMIT:
         print("Redraw failed after max retries.")
         return
     populate_screen()
-    bg_color = colors[BG_COLOR]  # Cache BG color
+    bg_color = colors[BG_COLOR]  # Cache BG color once per frame
     try:
         for a in range(HEIGHT):
             for b in range(WIDTH):
                 color_code = screen[a][b]
                 if screen2[a][b] != color_code:  # Only update changed pixels
                     pixel(b, a, colors.get(color_code, bg_color))
+        # Only copy screen to screen2 if no exceptions occurred
         screen2 = [row[:] for row in screen]  # Deep copy
         redraw_retry_count = 0  # Reset retry count on successful redraw
     except Exception as e:
@@ -367,36 +516,27 @@ def redraw():
 
 def game_loop():
     if not INIT:
-        return  # Stop if not initialized or "g" is pressed
+        return  # Stop if not initialized
     update_game()
     redraw()
 
 def key_down(event):
     global keys
     keys.add(event.key)
-        
+       
 def key_up(event):
     global keys
     keys.discard(event.key)
 
 def is_key_down(key):
     return key in keys
-    
+
 def update_game():
-    # Update game logic here, such as moving characters or changing sprite 
+    # Update game logic here, such as moving characters or changing sprites
     pass
 
 add_key_down_handler(key_down)
 add_key_up_handler(key_up)
-
-# Update frame index for animation
-def update_frame(char):
-    # Cycles frame index within the range of available frames
-    char["frame_index"] = (char["frame_index"] + 1) % len(sprites[char["sprite_id"]])
-
-def update_z(char, new_z_value):
-    char["z"] = new_z_value  # Update the z-value
-    sort_list(plist)  # Re-sort plist based on the updated z-values
 
 # Initialize the screen with initial sprites
 def init():
@@ -405,7 +545,7 @@ def init():
         print("Initialization failed after max retries.")
         return
     elif retry_count == 0:
-        print("Beginning initialization. Please be patient, the console may log some errors but it will be okay.")
+        print("Beginning initialization. Please be patient.")
     populate_screen()
     try:
         for a in range(HEIGHT):
@@ -418,8 +558,7 @@ def init():
         retry_count = 0
         timer.set_interval(game_loop, UP_INT)  # Start the game loop, pausing for UP_INT ms (defaults to 30).
     except Exception as e:
-        print(f"Something went wrong during initialization: {e}. Retrying in 100ms...")
+        if str(e) != "'NoneType' object has no attribute 'data'":
+            print(f"Something went wrong during initialization: {e}. Retrying in 100ms...")
         retry_count += 1
         timer.set_timeout(init, 100)
-
-init()
